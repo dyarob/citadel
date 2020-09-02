@@ -29,15 +29,23 @@ m->mid[1] += fgetc(f)-'0';
 fseek(f, 31, 0);
 while(fgetc(f)!='\n') {
 	i++;
-	fseek(f, 31+18*i, 0);
+	fseek(f, 31+26*i, 0);
 }
 m->doors = malloc(sizeof(void*)*i);
 for(int j=0; j<i; j++) {
-	fseek(f, 34+18*j, 0);
+	fseek(f, 34+26*j, 0);
 	m->doors[j] = malloc(sizeof(Door));
 	m->doors[j]->dstpath = malloc(7);
 	fread(m->doors[j]->dstpath, 1, 6, f);
 	m->doors[j]->dstpath[6] = '\0';
+	fgetc(f);
+	m->doors[j]->pos[0] = (fgetc(f)-'0')*100;
+	m->doors[j]->pos[0] += (fgetc(f)-'0')*10;
+	m->doors[j]->pos[0] += fgetc(f)-'0';
+	fgetc(f);
+	m->doors[j]->pos[1] = (fgetc(f)-'0')*100;
+	m->doors[j]->pos[1] += (fgetc(f)-'0')*10;
+	m->doors[j]->pos[1] += fgetc(f)-'0';
 	fgetc(f);
 	m->doors[j]->dstpos[0] = (fgetc(f)-'0')*100;
 	m->doors[j]->dstpos[0] += (fgetc(f)-'0')*10;
@@ -47,7 +55,7 @@ for(int j=0; j<i; j++) {
 	m->doors[j]->dstpos[1] += (fgetc(f)-'0')*10;
 	m->doors[j]->dstpos[1] += fgetc(f)-'0';
 }
-fseek(f, 32+18*i, 0);
+fseek(f, 32+26*i, 0);
 
 // actual map
 m->s = malloc(m->siz[0]*(m->siz[1]+1));

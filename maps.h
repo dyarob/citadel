@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 typedef struct {
+	int	pos[2];
 	char	*dstpath;
 	int	dstpos[2];
 } Door;

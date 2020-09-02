@@ -53,7 +53,9 @@ while(1) {
 	else if(c == 'f' && !map->collision[(cpos[0])*map->siz[1]+cpos[1]+1])
 		{ mapoffset[1]--; cpos[1]++; }
 	if(map->s[cpos[0]*(map->siz[1]+1)+cpos[1]] == 'D') {
-		map = loadmap("maps/2");
+		int i;
+		for(i=0; map->doors[i]->pos[0]!=cpos[0] && map->doors[i]->pos[1]!=cpos[1]; i++);
+		map = loadmap(map->doors[i]->dstpath);
 		cpos[0] = map->mid[0]-1; cpos[1] = map->mid[1]-1;
 		mapoffset[0] = 0; mapoffset[1] = 0;
 	}
