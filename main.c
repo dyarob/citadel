@@ -15,7 +15,7 @@ refresh();
 char	c = 0;
 Map	*map1 = loadmap();
 WINDOW	*mapw = newwin(map1->siz[0], map1->siz[1]+1,
-		LINES/2-map1->siz[0]/2, COLS/2-map1->siz[1]/2);
+		LINES/2-map1->mid[0], COLS/2-map1->mid[1]);
 
 // display
 mvwaddstr(mapw, 0, 0, map1->s);
