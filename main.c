@@ -19,6 +19,7 @@ WINDOW	*mapw = newwin(map1->siz[0], map1->siz[1]+1,
 
 // display
 mvwaddstr(mapw, 0, 0, map1->s);
+mvaddch(LINES/2-1, COLS/2-1, 'C');
 wrefresh(mapw);
 
 while((c=getch())==ERR);
