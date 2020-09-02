@@ -1,15 +1,23 @@
 #include "maps.h"
 
-char	*loadmap() {
+Map	*loadmap() {
 
 FILE	*f = fopen("maps/1", "r");
-int	size = 0;
-char	*s = NULL;
+Map	*m = malloc(sizeof(Map));
 
-fseek(f, 0, SEEK_END);
-size = ftell(f);
-rewind(f);
-s = malloc(size);
-fread(s, sizeof(char), size/sizeof(char), f);
+fseek(f, 5, 0);
+m->siz[0] = fgetc(f)*100 + fgetc(f)*10 + fgetc(f);
+fgetc(f);
+m->siz[1] = fgetc(f)*100 + fgetc(f)*10 + fgetc(f);
 
-return s;}
+fseek(f, 17, 0);
+m->mid[0] = fgetc(f)*100 + fgetc(f)*10 + fgetc(f);
+fgetc(f);
+m->mid[1] = fgetc(f)*100 + fgetc(f)*10 + fgetc(f);
+
+fgetc(f);
+m->s = malloc(m->siz[0]*m->siz[1] +m->siz[0]);
+fread(m->s, 1, m->siz[0]*m->siz[1] +m->siz[0], f);
+
+fclose(f);
+return m;}

@@ -14,12 +14,12 @@ refresh();
 // variables here
 WINDOW	*window = newwin(40, 100, LINES/2-20, COLS/2-50);
 char	c = 0;
-char	*map1 = loadmap();
+Map	*map1 = loadmap();
 
 box(window, 0, 0);
 mvwaddstr(window, 2, 2, "Press a key");
 
-mvwaddstr(window, 4, 0, map1);
+mvwaddstr(window, 4, 0, map1->s);
 wrefresh(window);
 
 while((c=getch())==ERR);
