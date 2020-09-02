@@ -19,6 +19,8 @@ WINDOW	*mapw = newwin(LINES, COLS, 0, 0);
 int	mapoffset[2] = {0, 0};
 //character
 int	cpos[2] = {map1->mid[0]-1, map1->mid[1]-1};
+//UI
+WINDOW	*mtitl = newwin(5, 25, 1, 2);
 
 while(1) {
 	// display
@@ -31,6 +33,10 @@ while(1) {
 	//character
 	mvaddch(LINES/2-1, COLS/2-1, 'C');
 	wrefresh(mapw);
+	//UI
+	box(mtitl, 0, 0);
+	mvwaddstr(mtitl, 2, 3, "Citadel Hall");
+	wrefresh(mtitl);
 
 	// game
 	while((c=getch())==ERR);
