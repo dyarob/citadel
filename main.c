@@ -12,19 +12,18 @@ nodelay(stdscr, TRUE);
 refresh();
 
 // variables here
-WINDOW	*window = newwin(40, 100, LINES/2-20, COLS/2-50);
 char	c = 0;
 Map	*map1 = loadmap();
+WINDOW	*mapw = newwin(map1->siz[0], map1->siz[1]+1,
+		LINES/2-map1->siz[0]/2, COLS/2-map1->siz[1]/2);
 
-box(window, 0, 0);
-mvwaddstr(window, 2, 2, "Press a key");
-
-mvwaddstr(window, 4, 0, map1->s);
-wrefresh(window);
+// display
+mvwaddstr(mapw, 0, 0, map1->s);
+wrefresh(mapw);
 
 while((c=getch())==ERR);
 
 // ending
-delwin(window);
+delwin(mapw);
 endwin();
 return 0;}
