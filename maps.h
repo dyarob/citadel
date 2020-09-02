@@ -12,6 +12,6 @@ typedef struct	{
 	bool	*collision;
 } Map;
 
-Map	*loadmap();
+Map	*loadmap(const char *map);
 
 #endif

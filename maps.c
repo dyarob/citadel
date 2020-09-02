@@ -1,8 +1,8 @@
 #include "maps.h"
 
-Map	*loadmap() {
+Map	*loadmap(const char *map) {
 
-FILE	*f = fopen("maps/1", "r");
+FILE	*f = fopen(map, "r");
 Map	*m = malloc(sizeof(Map));
 
 fseek(f, 4, 0);
