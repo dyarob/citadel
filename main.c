@@ -19,7 +19,7 @@ Map	*map = loadmap("maps/1");
 //character
 int	cpos[2] = {10, 18};
 //UI
-WINDOW	*mtitl = newwin(5, 25, 1, 2);
+WINDOW	*mtitl = newwin(5, strlen(map->title)+6, 1, 2);
 
 while(1) {
 	// display
@@ -34,7 +34,7 @@ while(1) {
 	wrefresh(mapw);
 	//UI
 	box(mtitl, 0, 0);
-	mvwaddstr(mtitl, 2, 3, "Citadel Hall");
+	mvwaddstr(mtitl, 2, 3, map->title);
 	wrefresh(mtitl);
 
 	// game
@@ -51,6 +51,7 @@ while(1) {
 		for(i=0; map->doors[i]->pos[0]!=cpos[0] || map->doors[i]->pos[1]!=cpos[1]; i++);
 		cpos[0] = map->doors[i]->dstpos[0]; cpos[1] = map->doors[i]->dstpos[1];
 		map = loadmap(map->doors[i]->dstpath);
+		delwin(mtitl); mtitl = newwin(5, strlen(map->title)+6, 1, 2);
 	}
 }
 

@@ -6,14 +6,14 @@
 #include <stdio.h>
 
 typedef struct {
-	int	pos[2];
 	char	*dstpath;
+	int	pos[2];
 	int	dstpos[2];
 } Door;
 
 typedef struct	{
+	char	*title;
 	int	siz[2];
-	int	mid[2];
 	char	*s;
 	bool	*collision;
 	Door	**doors;
