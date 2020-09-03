@@ -1,4 +1,10 @@
 siz:021;109 mid:010;080
+doors:
+1. maps/1 008;078 010;035
+2. maps/1 009;078 011;035
+3. maps/1 008;030 010;001
+4. maps/1 009;030 011;001
+
    ooo      oooo      ooo                                                           ooo      oooo      ooo   
  o     o  o      o  o     o                                                       o     o  o      o  o     o 
 o       oo        oo       o                                                     o       oo        oo       o
