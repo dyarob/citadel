@@ -47,15 +47,19 @@ while(1) {
 	else if(c == 'f' && !map->collision[(cpos[0])*map->siz[1]+cpos[1]+1]) cpos[1]++;
 	//going through doors
 	if(map->s[cpos[0]*(map->siz[1]+1)+cpos[1]] == 'D') {
-		int i;
+		int	i;
+		void	*buf;
 		for(i=0; map->doors[i]->pos[0]!=cpos[0] || map->doors[i]->pos[1]!=cpos[1]; i++);
 		cpos[0] = map->doors[i]->dstpos[0]; cpos[1] = map->doors[i]->dstpos[1];
+		buf = map;
 		map = loadmap(map->doors[i]->dstpath);
+		delmap(buf);
 		delwin(mtitl); mtitl = newwin(5, strlen(map->title)+6, 1, 2);
 	}
 }
 
 // ending
+delmap(map);
 delwin(mapw);
 endwin();
 return 0;}

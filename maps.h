@@ -20,5 +20,6 @@ typedef struct	{
 } Map;
 
 Map	*loadmap(const char *map);
+void	delmap(Map *map);
 
 #endif

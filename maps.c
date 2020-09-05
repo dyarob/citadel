@@ -22,7 +22,7 @@ while(fgetc(f)!='\n') {
 	i++;
 	fseek(f, 19+26*i, 0);
 }
-m->doors = malloc(sizeof(void*)*i);
+m->doors = malloc(sizeof(void*)*(i+1));
 for(int j=0; j<i; j++) {
 	fseek(f, 22+26*j, 0);
 	m->doors[j] = malloc(sizeof(Door));
@@ -46,6 +46,7 @@ for(int j=0; j<i; j++) {
 	m->doors[j]->dstpos[1] += (fgetc(f)-'0')*10;
 	m->doors[j]->dstpos[1] += fgetc(f)-'0';
 }
+m->doors[i] = NULL;
 fseek(f, 20+26*i, 0);
 
 // title
@@ -73,3 +74,16 @@ for(int i=0; i<m->siz[1]; i++)
 	else m->collision[j*m->siz[1]+i] = false;
 
 return m;}
+
+
+void	delmap(Map *map) {
+free(map->title);
+free(map->s);
+free(map->collision);
+for(int i=0; map->doors[i]!=NULL; i++) {
+	free(map->doors[i]->dstpath);
+	free(map->doors[i]);
+}
+free(map->doors);
+free(map);
+}
