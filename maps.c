@@ -2,9 +2,9 @@
 
 Map	*loadmap(const char *map) {
 
-FILE	*f = fopen(map, "r");
 Map	*m = malloc(sizeof(Map));
 int	i = 0;
+FILE	*f = fopen(map, "r");
 
 // info
 fseek(f, 4, 0);
@@ -57,6 +57,9 @@ fseek(f, -i-1, SEEK_CUR);
 i = 0;
 while((m->title[i] = fgetc(f))!='\n') i++;
 m->title[i] = '\0';
+
+while(fgetc(f)!='\n');
+while(fgetc(f)!='\n');
 
 // actual map
 m->s = malloc(m->siz[0]*(m->siz[1]+1));

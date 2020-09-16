@@ -2,6 +2,7 @@
 #include <locale.h>
 
 #include "maps.h"
+#include "raven.h"
 
 int	main(int ac, char **av) {
 
@@ -18,6 +19,8 @@ WINDOW	*mapw = newwin(LINES, COLS, 0, 0);
 Map	*map = loadmap("maps/1");
 //character
 int	cpos[2] = {10, 18};
+//npcs
+int	**raven = loadraven("raven");
 //UI
 WINDOW	*mtitl = newwin(5, strlen(map->title)+6, 1, 2);
 
@@ -31,6 +34,12 @@ while(1) {
 			(COLS/2-cpos[1]+map->siz[1]<COLS?map->siz[1]:map->siz[1]+(COLS-(COLS/2-cpos[1]+map->siz[1]))));
 	//character
 	mvaddch(LINES/2, COLS/2, 'C');
+	//npcs
+	if (map->title[0] == 'S')
+		for (int i=0; raven[i]!= NULL; i++)
+			mvwaddch(mapw, LINES/2-cpos[0]+raven[i][0],
+				COLS/2-cpos[1]+raven[i][1], 'R');
+
 	wrefresh(mapw);
 	//UI
 	box(mtitl, 0, 0);

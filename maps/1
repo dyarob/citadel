@@ -5,7 +5,9 @@ doors:
 1. maps/2 010;000 008;029
 2. maps/2 011;000 009;029
 
-Citadell Hallway
+Citadell Hall
+0         1         2         3      
+0123456789012345678901234567890123456
    oo   ooo   ooo   ooo   o     ooo  
      o o   o o   o o   o o   o o   o 
 o     o     o     o     o     o     o
