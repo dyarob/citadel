@@ -4,7 +4,7 @@
 #include "timer.h"
 #include "save.h"
 #include "maps.h"
-#include "raven.h"
+#include "npc.h"
 
 int	main(int ac, char **av) {
 
@@ -23,7 +23,7 @@ WINDOW	*mapw = newwin(LINES, COLS, 0, 0);
 //character
 int	cpos[2];
 //npcs
-int	**raven = loadraven("raven");
+Npc	**npc = loadnpc();
 
 // loading save
 load(&curmap, cpos);
@@ -31,17 +31,15 @@ if(curmap) {
 	map = (loadmap(curmap));
 } else {
 	map = (loadmap("maps/1"));
-	cpos[0] = 10; cpos[1] = 18;
-}
+	cpos[0] = 10; cpos[1] = 18;}
 
 //UI
 WINDOW	*mtitl = newwin(5, strlen(map->title)+6, 1, 2);
-/*
 WINDOW	*mcontt = newwin(LINES-14, 25, 7, 2);
-*/
 bool	quit = false;
 WINDOW	*exit = newwin(5, 50, LINES/2-3, COLS/2-25);
 
+// MAIN LOOP
 struct timeval	t; gettimeofday(&t, NULL);
 while(1) {
 	// display
@@ -54,34 +52,37 @@ while(1) {
 	//character
 	mvwaddch(mapw, LINES/2, COLS/2, 'C');
 	//npcs
-	if(map->title[0] == 'S')
-		for(int i=0; raven[i]!= NULL; i++)
-			mvwaddch(mapw, LINES/2-cpos[0]+raven[i][0],
-				COLS/2-cpos[1]+raven[i][1], 'R');
+	for(int i=0; npc[i]; i++)
+		if(!strcmp(map->path, npc[i]->map))
+			mvwaddch(mapw, LINES/2-cpos[0]+npc[i]->pos[0],
+				COLS/2-cpos[1]+npc[i]->pos[1], npc[i]->name[0]);
 
 	wrefresh(mapw);
 	//UI
-	box(mtitl, 0, 0);
 	mvwaddstr(mtitl, 2, 3, map->title);
+	box(mtitl, 0, 0);
 	wrefresh(mtitl);
-/*
+
+	wmove(mcontt, 1, 2);
+	for(int i=0; npc[i]; i++) {
+		if(!strcmp(map->path, npc[i]->map)) {
+			waddch(mcontt, npc[i]->name[0]);
+			waddstr(mcontt, "- ");
+			waddstr(mcontt, npc[i]->name);
+			waddstr(mcontt, "\n  ");}}
 	box(mcontt, 0, 0);
-	for(int i=0; raven[i]!=NULL; i++)
-		mvwaddstr(mcontt, i+1, 2, "R- Rat man");
 	wrefresh(mcontt);
-*/
+
 	if(quit) {
 		box(exit, 0, 0);
 		mvwaddstr(exit, 2, 3, "Save before exiting? (y/n/space)");
-		wrefresh(exit);
-	}
+		wrefresh(exit);}
 
-	// game
+	// GAME
 	c = getch();
 	if(quit && c == 'y') {
 		save(map->path, cpos);
-		break;
-	}
+		break;}
 	else if(quit && c == 'n') break;
 	else if(quit && c == ' ') quit = false;
 	else if(c == 'q') quit = true;
@@ -100,16 +101,16 @@ while(1) {
 		map = loadmap(map->doors[i]->dstpath);
 		delmap(buf);
 		delwin(mtitl); mtitl = newwin(5, strlen(map->title)+6, 1, 2);
+		werase(mcontt);
 	}
 	twait(&t);
 }
 
 // ending
+freenpc(npc);
 free(curmap);
 delwin(mtitl);
-/*
 delwin(mcontt);
-*/
 delmap(map);
 delwin(mapw);
 endwin();
