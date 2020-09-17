@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <locale.h>
 
+#include "save.h"
 #include "maps.h"
 #include "raven.h"
 
@@ -15,8 +16,9 @@ refresh();
 // variables here
 char	c = 0;
 //current map
+char	*curmap = load();
+Map	*map = (curmap? loadmap(curmap) : loadmap("maps/1"));
 WINDOW	*mapw = newwin(LINES, COLS, 0, 0);
-Map	*map = loadmap("maps/1");
 //character
 int	cpos[2] = {10, 18};
 //npcs
@@ -26,6 +28,8 @@ WINDOW	*mtitl = newwin(5, strlen(map->title)+6, 1, 2);
 /*
 WINDOW	*mcontt = newwin(LINES-14, 25, 7, 2);
 */
+bool	quit = false;
+WINDOW	*exit = newwin(5, 50, LINES/2-3, COLS/2-25);
 
 while(1) {
 	// display
@@ -36,7 +40,7 @@ while(1) {
 			map->s + i*(map->siz[1]+1) -(COLS/2-cpos[1]<0?COLS/2-cpos[1]:0),
 			(COLS/2-cpos[1]+map->siz[1]<COLS?map->siz[1]:map->siz[1]+(COLS-(COLS/2-cpos[1]+map->siz[1]))));
 	//character
-	mvaddch(LINES/2, COLS/2, 'C');
+	mvwaddch(mapw, LINES/2, COLS/2, 'C');
 	//npcs
 	if(map->title[0] == 'S')
 		for(int i=0; raven[i]!= NULL; i++)
@@ -51,13 +55,24 @@ while(1) {
 /*
 	box(mcontt, 0, 0);
 	for(int i=0; raven[i]!=NULL; i++)
-		mvwaddstr(mcontt, i+1, 2, "Rat man");
+		mvwaddstr(mcontt, i+1, 2, "R- Rat man");
 	wrefresh(mcontt);
 */
+	if(quit) {
+		box(exit, 0, 0);
+		mvwaddstr(exit, 2, 3, "Save before exiting? (y/n/space)");
+		wrefresh(exit);
+	}
 
 	// game
 	while((c=getch())==ERR);
-	if(c == 'q') break;
+	if(quit && c == 'y') {
+		save(map->path);
+		break;
+	}
+	else if(quit && c == 'n') break;
+	else if(quit && c == ' ') quit = false;
+	else if(c == 'q') quit = true;
 	//movement
 	else if(c == 'e' && !map->collision[(cpos[0]-1)*map->siz[1]+cpos[1]]) cpos[0]--;
 	else if(c == 'd' && !map->collision[(cpos[0]+1)*map->siz[1]+cpos[1]]) cpos[0]++;
@@ -77,6 +92,11 @@ while(1) {
 }
 
 // ending
+free(curmap);
+delwin(mtitl);
+/*
+delwin(mcontt);
+*/
 delmap(map);
 delwin(mapw);
 endwin();

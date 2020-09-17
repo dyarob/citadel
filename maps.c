@@ -6,6 +6,9 @@ Map	*m = malloc(sizeof(Map));
 int	i = 0;
 FILE	*f = fopen(map, "r");
 
+m->path = malloc(7); m->path[7]='\0';
+strcpy(m->path, map);
+
 // info
 fseek(f, 4, 0);
 m->siz[0] = (fgetc(f)-'0')*100;

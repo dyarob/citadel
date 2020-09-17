@@ -12,6 +12,7 @@ typedef struct {
 } Door;
 
 typedef struct	{
+	char	*path;
 	char	*title;
 	int	siz[2];
 	char	*s;
