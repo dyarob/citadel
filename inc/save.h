@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-char	*load();
-void	save();
+void	load(char **curmap, int cpos[2]);
+void	save(char *curmap, int cpos[2]);
 
 #endif

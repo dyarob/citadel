@@ -17,13 +17,23 @@ refresh();
 // variables here
 char	c = 0;
 //current map
-char	*curmap = load();
-Map	*map = (curmap? loadmap(curmap) : loadmap("maps/1"));
+char	*curmap;
+Map	*map;
 WINDOW	*mapw = newwin(LINES, COLS, 0, 0);
 //character
-int	cpos[2] = {10, 18};
+int	cpos[2];
 //npcs
 int	**raven = loadraven("raven");
+
+// loading save
+load(&curmap, cpos);
+if(curmap) {
+	map = (loadmap(curmap));
+} else {
+	map = (loadmap("maps/1"));
+	cpos[0] = 10; cpos[1] = 18;
+}
+
 //UI
 WINDOW	*mtitl = newwin(5, strlen(map->title)+6, 1, 2);
 /*
@@ -69,7 +79,7 @@ while(1) {
 	// game
 	c = getch();
 	if(quit && c == 'y') {
-		save(map->path);
+		save(map->path, cpos);
 		break;
 	}
 	else if(quit && c == 'n') break;
