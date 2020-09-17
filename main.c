@@ -23,6 +23,9 @@ int	cpos[2] = {10, 18};
 int	**raven = loadraven("raven");
 //UI
 WINDOW	*mtitl = newwin(5, strlen(map->title)+6, 1, 2);
+/*
+WINDOW	*mcontt = newwin(LINES-14, 25, 7, 2);
+*/
 
 while(1) {
 	// display
@@ -35,8 +38,8 @@ while(1) {
 	//character
 	mvaddch(LINES/2, COLS/2, 'C');
 	//npcs
-	if (map->title[0] == 'S')
-		for (int i=0; raven[i]!= NULL; i++)
+	if(map->title[0] == 'S')
+		for(int i=0; raven[i]!= NULL; i++)
 			mvwaddch(mapw, LINES/2-cpos[0]+raven[i][0],
 				COLS/2-cpos[1]+raven[i][1], 'R');
 
@@ -45,6 +48,12 @@ while(1) {
 	box(mtitl, 0, 0);
 	mvwaddstr(mtitl, 2, 3, map->title);
 	wrefresh(mtitl);
+/*
+	box(mcontt, 0, 0);
+	for(int i=0; raven[i]!=NULL; i++)
+		mvwaddstr(mcontt, i+1, 2, "Rat man");
+	wrefresh(mcontt);
+*/
 
 	// game
 	while((c=getch())==ERR);
