@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <locale.h>
 
+#include "timer.h"
 #include "save.h"
 #include "maps.h"
 #include "raven.h"
@@ -31,6 +32,7 @@ WINDOW	*mcontt = newwin(LINES-14, 25, 7, 2);
 bool	quit = false;
 WINDOW	*exit = newwin(5, 50, LINES/2-3, COLS/2-25);
 
+struct timeval	t; gettimeofday(&t, NULL);
 while(1) {
 	// display
 	//map
@@ -65,7 +67,7 @@ while(1) {
 	}
 
 	// game
-	while((c=getch())==ERR);
+	c = getch();
 	if(quit && c == 'y') {
 		save(map->path);
 		break;
@@ -89,6 +91,7 @@ while(1) {
 		delmap(buf);
 		delwin(mtitl); mtitl = newwin(5, strlen(map->title)+6, 1, 2);
 	}
+	twait(&t);
 }
 
 // ending
