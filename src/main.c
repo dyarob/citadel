@@ -16,6 +16,7 @@ refresh();
 
 // variables here
 char	c = 'y';
+int	frame = 0;
 //current map
 char	*curmap;
 Map	*map;
@@ -24,6 +25,7 @@ WINDOW	*mapw = newwin(LINES, COLS, 0, 0);
 int	cpos[2];
 //npcs
 Npc	**npc = loadnpc();
+int	i0, i1;
 
 // loading save
 load(&curmap, cpos);
@@ -49,11 +51,25 @@ char	*s = malloc(100);
 WINDOW	*dialog = newwin(5, COLS-54, LINES-6, COLS/2-(COLS-54)/2);
 
 // MAIN LOOP
+srand(time(NULL));
 struct timeval	t; gettimeofday(&t, NULL);
 while(1) {
+	frame++;
+
+	// npc actions
+	if(frame == 180) { frame = 1;
+		for(int i=0; npc[i]; i++) {
+			i0 = npc[i]->pos[0] + rand()%3-1;
+			i1 = npc[i]->pos[1] + rand()%3-1;
+			if(!strcmp(map->path, npc[i]->map)) {
+				if(!map->collision[i0*map->siz[1]+i1]) {
+					npc[i]->pos[0] = i0;
+					npc[i]->pos[1] = i1;}}
+		}
+	}
 
 	// display
-	if(c!=ERR) {
+	if(c!=ERR || frame == 1) {
 		//map
 		werase(mapw);
 		for(int i=0; i<map->siz[0]; i++)
