@@ -36,8 +36,12 @@ if(curmap) {
 //UI
 WINDOW	*mtitl = newwin(5, strlen(map->title)+6, 1, 2);
 WINDOW	*mcontt = newwin(LINES-10, 25, 5, 2);
+
 bool	quit = false;
 WINDOW	*exit = newwin(5, 50, LINES/2-3, COLS/2-25);
+bool	hist = false;
+char	*s_hist = malloc(10000); s_hist[0] = '\0'; // /!\.
+WINDOW	*w_hist = newwin(LINES-6, COLS-20, 3, 10);
 
 Npc	*talk = NULL;
 FILE	*f;
@@ -78,13 +82,19 @@ while(1) {
 				waddstr(mcontt, "\n  ");}}
 		box(mcontt, 0, 0); wrefresh(mcontt);
 
+		if(talk) {
+			mvwaddstr(dialog, 2, 3, s);}
+		box(dialog, 0, 0);
+		mvwaddstr(dialog, 4, COLS-54-25, "h- history");
+		wrefresh(dialog);
+
+		if(hist) {
+			mvwaddstr(w_hist, 1, 0, s_hist);
+			box(w_hist, 0, 0); wrefresh(w_hist);}
+
 		if(quit) {
 			mvwaddstr(exit, 2, 3, "Save before exiting? (y/n/space)");
 			box(exit, 0, 0); wrefresh(exit);}
-
-		if(talk) {
-			mvwaddstr(dialog, 2, 3, s);
-			box(dialog, 0, 0); wrefresh(dialog);}
 	}
 
 	// GAME
@@ -94,8 +104,11 @@ while(1) {
 			save(map->path, cpos);
 			break;}
 		else if(quit && c == 'n') break;
-		else if(quit && c == ' ') quit = false;
+		else if(c == ' ') {
+			if(quit) quit = false;
+			else if(hist) hist = false;}
 		else if(c == 'q') quit = true;
+		else if(c == 'h') hist = true;
 		//actions
 		else if(c == 't') {
 			for(int i=0; npc[i]; i++)
@@ -103,10 +116,13 @@ while(1) {
 					&& abs(cpos[0]-npc[i]->pos[0])+abs(cpos[1]-npc[i]->pos[1] < 3))
 					talk = npc[i];
 					strcpy(s, "talk/"); strcat(s, talk->name);
-					f = fopen(s, "r"); fgets(s, 100, f); fclose(f);}
+					f = fopen(s, "r"); fgets(s, 100, f); fclose(f);
+					strcat(s_hist, "  "); strcat(s_hist, s);}
 		//movement
-		else if(c == 'e' || c == 'd' || c == 's' || c == 'f') {
-			talk = NULL;
+		else if(!quit && !hist && (c == 'e' || c == 'd' || c == 's' || c == 'f')) {
+			if(talk) {
+				talk = NULL;
+				werase(dialog);}
 			if(c == 'e' && !map->collision[(cpos[0]-1)*map->siz[1]+cpos[1]]) cpos[0]--;
 			else if(c == 'd' && !map->collision[(cpos[0]+1)*map->siz[1]+cpos[1]]) cpos[0]++;
 			else if(c == 's' && !map->collision[(cpos[0])*map->siz[1]+cpos[1]-1]) cpos[1]--;
