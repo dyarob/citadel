@@ -39,6 +39,11 @@ WINDOW	*mcontt = newwin(LINES-14, 25, 7, 2);
 bool	quit = false;
 WINDOW	*exit = newwin(5, 50, LINES/2-3, COLS/2-25);
 
+Npc	*talk = NULL;
+FILE	*f;
+char	*s = malloc(100);
+WINDOW	*dialog = newwin(5, 100, LINES-6, COLS/2-50);
+
 // MAIN LOOP
 struct timeval	t; gettimeofday(&t, NULL);
 while(1) {
@@ -60,8 +65,7 @@ while(1) {
 	wrefresh(mapw);
 	//UI
 	mvwaddstr(mtitl, 2, 3, map->title);
-	box(mtitl, 0, 0);
-	wrefresh(mtitl);
+	box(mtitl, 0, 0); wrefresh(mtitl);
 
 	wmove(mcontt, 1, 2);
 	for(int i=0; npc[i]; i++) {
@@ -70,43 +74,58 @@ while(1) {
 			waddstr(mcontt, "- ");
 			waddstr(mcontt, npc[i]->name);
 			waddstr(mcontt, "\n  ");}}
-	box(mcontt, 0, 0);
-	wrefresh(mcontt);
+	box(mcontt, 0, 0); wrefresh(mcontt);
 
 	if(quit) {
-		box(exit, 0, 0);
 		mvwaddstr(exit, 2, 3, "Save before exiting? (y/n/space)");
-		wrefresh(exit);}
+		box(exit, 0, 0); wrefresh(exit);}
+
+	if(talk) {
+	mvwaddstr(dialog, 2, 3, s);
+	box(dialog, 0, 0); wrefresh(dialog);}
 
 	// GAME
 	c = getch();
+	//basics & UI
 	if(quit && c == 'y') {
 		save(map->path, cpos);
 		break;}
 	else if(quit && c == 'n') break;
 	else if(quit && c == ' ') quit = false;
 	else if(c == 'q') quit = true;
+	//actions
+	else if(c == 't') {
+		for(int i=0; npc[i]; i++)
+			if(!strcmp(map->path, npc[i]->map)
+				&& abs(cpos[0]-npc[i]->pos[0])+abs(cpos[1]-npc[i]->pos[1] < 3))
+				talk = npc[i];
+				strcpy(s, "talk/"); strcat(s, talk->name);
+				f = fopen(s, "r"); fgets(s, 100, f); fclose(f);}
 	//movement
-	else if(c == 'e' && !map->collision[(cpos[0]-1)*map->siz[1]+cpos[1]]) cpos[0]--;
-	else if(c == 'd' && !map->collision[(cpos[0]+1)*map->siz[1]+cpos[1]]) cpos[0]++;
-	else if(c == 's' && !map->collision[(cpos[0])*map->siz[1]+cpos[1]-1]) cpos[1]--;
-	else if(c == 'f' && !map->collision[(cpos[0])*map->siz[1]+cpos[1]+1]) cpos[1]++;
-	//going through doors
-	if(map->s[cpos[0]*(map->siz[1]+1)+cpos[1]] == 'D') {
-		int	i;
-		void	*buf;
-		for(i=0; map->doors[i]->pos[0]!=cpos[0] || map->doors[i]->pos[1]!=cpos[1]; i++);
-		cpos[0] = map->doors[i]->dstpos[0]; cpos[1] = map->doors[i]->dstpos[1];
-		buf = map;
-		map = loadmap(map->doors[i]->dstpath);
-		delmap(buf);
-		delwin(mtitl); mtitl = newwin(5, strlen(map->title)+6, 1, 2);
-		werase(mcontt);
+	else if(c == 'e' || c == 'd' || c == 's' || c == 'f') {
+		talk = NULL;
+		if(c == 'e' && !map->collision[(cpos[0]-1)*map->siz[1]+cpos[1]]) cpos[0]--;
+		else if(c == 'd' && !map->collision[(cpos[0]+1)*map->siz[1]+cpos[1]]) cpos[0]++;
+		else if(c == 's' && !map->collision[(cpos[0])*map->siz[1]+cpos[1]-1]) cpos[1]--;
+		else if(c == 'f' && !map->collision[(cpos[0])*map->siz[1]+cpos[1]+1]) cpos[1]++;
+		//going through doors
+		if(map->s[cpos[0]*(map->siz[1]+1)+cpos[1]] == 'D') {
+			int	i;
+			void	*buf;
+			for(i=0; map->doors[i]->pos[0]!=cpos[0] || map->doors[i]->pos[1]!=cpos[1]; i++);
+			cpos[0] = map->doors[i]->dstpos[0]; cpos[1] = map->doors[i]->dstpos[1];
+			buf = map;
+			map = loadmap(map->doors[i]->dstpath);
+			delmap(buf);
+			delwin(mtitl); mtitl = newwin(5, strlen(map->title)+6, 1, 2);
+			werase(mcontt);
+		}
 	}
 	twait(&t);
 }
 
 // ending
+free(s);
 freenpc(npc);
 free(curmap);
 delwin(mtitl);
