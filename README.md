@@ -7,3 +7,7 @@ WIP EARLY STAGE - ALWAYS STABLE - NEW STUFF EVERYDAY
 - Singleplayer
 - Ratmen
 - ...not much yet
+
+### How to use
+q- quit\
+t- talk
