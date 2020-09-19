@@ -7,11 +7,12 @@ int	n = 0, j;
 FILE	*f = fopen("npc", "r");
 
 char	*s = malloc(100);
+fgets(s, 100, f);
 while(fgets(s, 100, f)) n++;
-free(s);
 r = malloc(sizeof(void*)*(n+1)); r[n] = NULL;
 
 fseek(f, 0, SEEK_SET);
+fgets(s, 100, f);
 for(int i=0; i<n; i++) {
 	r[i] = malloc(sizeof(Npc));
 
@@ -27,6 +28,8 @@ for(int i=0; i<n; i++) {
 	r[i]->pos[1] += (fgetc(f)-'0')*10;
 	r[i]->pos[1] += fgetc(f)-'0';
 	fgetc(f);
+	r[i]->spot[0] = r[i]->pos[0];
+	r[i]->spot[1] = r[i]->pos[1];
 
 	fgetc(f);
 	j = 0; while(fgetc(f)!='"') j++;
@@ -35,8 +38,18 @@ for(int i=0; i<n; i++) {
 	fread(r[i]->name, 1, j, f);
 	fgetc(f);
 	fgetc(f);
+
+	r[i]->range[0] = (fgetc(f)-'0')*100;
+	r[i]->range[0] += (fgetc(f)-'0')*10;
+	r[i]->range[0] += fgetc(f)-'0';
+	fgetc(f);
+	r[i]->range[1] = (fgetc(f)-'0')*100;
+	r[i]->range[1] += (fgetc(f)-'0')*10;
+	r[i]->range[1] += fgetc(f)-'0';
+	fgetc(f);
 }
 
+free(s);
 fclose(f);
 return r;
 }

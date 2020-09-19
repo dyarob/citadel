@@ -57,14 +57,17 @@ while(1) {
 	frame++;
 
 	// npc actions
-	if(frame == 180) { frame = 1;
+	if(frame == 120) { frame = 1;
 		for(int i=0; npc[i]; i++) {
-			i0 = npc[i]->pos[0] + rand()%3-1;
-			i1 = npc[i]->pos[1] + rand()%3-1;
 			if(!strcmp(map->path, npc[i]->map)) {
-				if(!map->collision[i0*map->siz[1]+i1]) {
-					npc[i]->pos[0] = i0;
-					npc[i]->pos[1] = i1;}}
+				if(rand()%2) {
+					i0 = npc[i]->pos[0] + rand()%3-1;
+					i1 = npc[i]->pos[1] + rand()%3-1;
+					if(!map->collision[i0*map->siz[1]+i1]
+						&& abs(i0-npc[i]->spot[0])<=npc[i]->range[0]
+						&& abs(i1-npc[i]->spot[1])<=npc[i]->range[1]) {
+						npc[i]->pos[0] = i0;
+						npc[i]->pos[1] = i1;}}}
 		}
 	}
 

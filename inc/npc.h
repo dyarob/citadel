@@ -7,6 +7,8 @@
 typedef struct {
 	char	*map;
 	int	pos[2];
+	int	spot[2];
+	int	range[2];
 	char	*name;
 } Npc;
 

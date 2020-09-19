@@ -1,7 +1,9 @@
-maps/3 005;034 "Rat man"
-maps/3 006;042 "Rat man"
-maps/3 003;048 "Rat man"
-maps/3 007;052 "Rat man"
-maps/3 005;054 "Rat man"
-maps/3 006;060 "Rat man"
-maps/1 010;018 "Stranger"
+map    pos     name      range
+maps/3 005;034 "Rat man" 999;999
+maps/3 006;042 "Rat man" 999;999
+maps/3 003;048 "Rat man" 999;999
+maps/3 007;052 "Rat man" 999;999
+maps/3 005;054 "Rat man" 999;999
+maps/3 006;060 "Rat man" 999;999
+maps/1 010;018 "Stranger" 999;999
+maps/2 014;095 "Goldenfingers" 001;003
