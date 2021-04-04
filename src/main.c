@@ -109,7 +109,9 @@ while(1) {
 
 		if(hist) {
 			mvwaddstr(w_hist, 1, 0, s_hist);
-			box(w_hist, 0, 0); wrefresh(w_hist);}
+			box(w_hist, 0, 0);
+			mvwaddstr(w_hist, LINES-6-1, COLS-20-25, "-space-");
+			wrefresh(w_hist);}
 
 		if(quit) {
 			mvwaddstr(exit, 2, 3, "Save before exiting? (y/n/space)");
