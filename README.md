@@ -1,6 +1,6 @@
 
 # The Citadel: A console-based ASCII game
-JUST BEGINNING SECOND ITERATION\
+## JUST BEGINNING SECOND ITERATION
 \
 The first time around we went as far as to 
 having Ratmen hanging around freely in the 
